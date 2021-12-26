@@ -6,7 +6,7 @@
 #    By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/21 18:52:28 by fcaquard          #+#    #+#              #
-#    Updated: 2021/12/26 14:06:24 by fcaquard         ###   ########.fr        #
+#    Updated: 2021/12/26 16:19:55 by fcaquard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ SRCS = \
 	ft_itoa.c	\
 	activities.c	\
 	circle.c		\
+	message.c		\
 
 OBJS = $(SRCS:.c=.o)
 

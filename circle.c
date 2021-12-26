@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:05:09 by fcaquard          #+#    #+#             */
-/*   Updated: 2021/12/26 14:42:37 by fcaquard         ###   ########.fr       */
+/*   Updated: 2021/12/26 16:23:32 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,28 +42,36 @@ pthread_mutex_lock,
 pthread_mutex_unlock
 */
 
+t_args	*init_args(void)
+{
+	t_args	*args;
+
+	args = malloc(sizeof(t_args) * 1);
+	if (!args)
+		return (NULL);
+	return (args);
+}
+
 int	check_digits(char *inputs)
 {
 	(void)inputs;
 	return (1);
 }
 
-int	sit(int n, int countdown, int feeding, int sleeping, int tours)
+int	sit(t_args *args)
 {
-	(void)countdown;
-	(void)feeding;
-	(void)sleeping;
-	(void)tours;
-
-	return (took_a_fork(n));
+	ph_took_a_fork(args->philo);
+	ph_eat(args->philo);
+	ph_sleep(args->philo);
+	ph_think(args->philo);
+	ph_died(args->philo);
+	return (1);
 }
 
 int	main(int argc, char *argv[])
 {
-	int tours;
+	t_args	*args;
 
-
-	tours = -1;
 	if (argc < 5 || argc > 6)
 		return (0);
 	while (argc-- > 1)
@@ -71,8 +79,18 @@ int	main(int argc, char *argv[])
 		if (!check_digits(argv[argc]))
 			return (0);
 	}
+	args = init_args();
+	if (!args)
+		return (0);
+	args->philo = ft_atoi(argv[1]);
+	args->countdown = ft_atoi(argv[2]);
+	args->feeding = ft_atoi(argv[3]);
+	args->sleeping = ft_atoi(argv[4]);
 	if (argc == 6)
-		tours = ft_atoi(argv[5]);
-	sit(ft_atoi(argv[1]), ft_atoi(argv[2]), ft_atoi(argv[3]), ft_atoi(argv[4]), tours);
-	return (0);
+		args->limit = ft_atoi(argv[5]);
+	else
+		args->limit = 0;
+	sit(args);
+	free(args);
+	return (1);
 }
