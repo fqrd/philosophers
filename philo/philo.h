@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:02:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/01/01 14:47:12 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/01/01 19:52:09 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,21 @@ typedef struct s_list
 	void			*content;	
 }	t_list;
 
-typedef struct s_seat
+typedef struct s_ph
 {
 	size_t			number;
 	pthread_t		thread;
-	pthread_mutex_t	fork_right;
 	pthread_mutex_t	fork_left;
-}	t_seat;
+	void			*fork_right;
+	size_t			die_ct;
+	size_t			feed_ct;
+	size_t			sleep_ct;
+	size_t			max_turns;
+}	t_ph;
 
 typedef struct s_args
 {
-	size_t	philos;
+	size_t	number;
 	size_t	die_time;
 	size_t	feed_time;
 	size_t	sleep_time;
@@ -53,7 +57,7 @@ int verifications(int argc, char *argv[]);
 /** LISTS **/
 t_list	*list_rewind(t_list *list);
 void	clear_list(t_list **list);
-void	clear_loop_list(t_args *args, t_list **list);
+void	clear_loop_list(size_t size, t_list **list);
 t_list	*init_list(t_list **previous);
 
 /** PHILO **/
@@ -64,4 +68,8 @@ int		ph_eat(size_t philo);
 int		ph_sleep(size_t philo);
 int		ph_think(size_t philo);
 int		ph_died(size_t philo);
+
+
+/** DEBUG **/
+int	ph_releases_a_fork(size_t philo);
 #endif

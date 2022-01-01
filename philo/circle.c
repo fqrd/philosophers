@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:05:09 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/01/01 14:44:41 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/01/01 20:04:13 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,50 +26,98 @@
 //	timestamp_in_ms	philo_number died
 
 /*
-memset
 printf
 malloc
 free
 write
-usleep
 gettimeofday
 pthread_create
-pthread_detach
 pthread_join
 pthread_mutex_init
-pthread_mutex_destroy
 pthread_mutex_lock,
 pthread_mutex_unlock
+
+memset
+usleep
+pthread_detach
+pthread_mutex_destroy
 */
 
-static	void *live()
+static	void *live(void *arg)
 {
-	ph_think(100);
+	size_t i;
+
+	i = 0;
+	while (1)
+	{
+		if (!pthread_mutex_lock(&(((t_ph *)(arg))->fork_left))
+			&& !pthread_mutex_lock(((pthread_mutex_t *)((t_ph *)(arg))->fork_right)))
+		{
+			ph_took_a_fork(((t_ph *)(arg))->number);
+			ph_took_a_fork(((t_ph *)(arg))->number);
+			ph_eat(((t_ph *)(arg))->number);
+			usleep(((t_ph *)(arg))->feed_ct);
+			i++;
+			if (i == ((t_ph *)(arg))->max_turns)
+			{
+				return (NULL);
+			}
+			pthread_mutex_unlock(&(((t_ph *)(arg))->fork_left));
+			pthread_mutex_unlock(((pthread_mutex_t *)((t_ph *)(arg))->fork_right));
+			// ph_releases_a_fork(((t_ph *)(arg))->number);
+			// ph_releases_a_fork(((t_ph *)(arg))->number);			
+			ph_sleep(((t_ph *)(arg))->number);
+			usleep(((t_ph *)(arg))->sleep_ct);
+		}
+		ph_think(((t_ph *)(arg))->number);
+		// if mutex right && left are free
+			// eat
+			// sleep
+		// else think
+	}
 	return (NULL);
 }
 
-static	t_list *init_pthreads(t_args *args, t_list *list)
+static t_list	*init_philos(t_args *args, t_list *list)
+{
+	size_t i;
+
+	i = 0;
+	while (i++ < args->number)
+	{
+		list->content = malloc(sizeof(t_ph) * 1);
+		if (!list->content)
+		{
+			clear_loop_list(args->number, &list);
+			return (NULL);
+		}
+		((t_ph *)(list->content))->number = i;
+		((t_ph *)(list->content))->die_ct = args->die_time;
+		((t_ph *)(list->content))->feed_ct = args->feed_time;
+		((t_ph *)(list->content))->sleep_ct = args->sleep_time;
+		((t_ph *)(list->content))->max_turns = args->feed_max;
+		pthread_mutex_init(&((t_ph *)(list->content))->fork_left, NULL);
+		list = list->next;
+	}
+	return (list);
+}
+
+static t_list	*init_pthreads(t_args *args, t_list *list)
 {
 	size_t	i;
 
 	i = 0;
-	while (i++ < args->philos)
+	while (i++ < args->number)
 	{
-		list->content = malloc(sizeof(t_seat) * 1);
-		if (!(list->content))
+		((t_ph *)(list->content))->fork_right = &(((t_ph *)(list->prev->content))->fork_left);
+		if (pthread_create(&(((t_ph *)(list->content))->thread), NULL, &live, list->content))
 		{
-			// TODO: should also destroy previous threads
-			clear_loop_list(args, &list);
+			// should clear mutex and threads !
+			// pthread_mutex_destroy(&mutex);
+			printf("Error init_pthread\n");
+			clear_loop_list(args->number, &list);
 			return (NULL);
 		}
-		((t_seat *)(list->content))->number = i;
-		if (pthread_create(&(((t_seat *)(list->content))->thread), NULL, &live, NULL))
-		{
-			// TODO: should also destroy previous threads
-			clear_loop_list(args, &list);
-			return (NULL);
-		}
-		ph_took_a_fork(((t_seat *)(list->content))->number);
 		list = list->next;
 	}
 	return (list);
@@ -81,7 +129,7 @@ t_list	*generate_list(t_args *args)
 	t_list	*list;
 	t_list	*first;
 
-	i = args->philos;
+	i = args->number;
 	list = NULL;
 	while (i-- > 0)
 	{
@@ -103,7 +151,7 @@ t_args	*init_args(int argc, char *argv[])
 	args = malloc(sizeof(t_args) * 1);
 	if (!args)
 		return (NULL);
-	args->philos = ft_atoi(argv[1]);
+	args->number = ft_atoi(argv[1]);
 	args->die_time = ft_atoi(argv[2]);
 	args->feed_time = ft_atoi(argv[3]);
 	args->sleep_time = ft_atoi(argv[4]);
@@ -119,23 +167,18 @@ int	join(t_args *args, t_list *list)
 	size_t	i;
 
 	i = 0;
-	while (i++ < args->philos)
+	while (i++ < args->number)
 	{
-		if (pthread_join((((t_seat *)(list->content))->thread), NULL))
+		if (pthread_join((((t_ph *)(list->content))->thread), NULL))
 		{
-			clear_loop_list(args, &list);
+			clear_loop_list(args->number, &list);
 			return (0);
 		}
-		ph_died(((t_seat *)(list->content))->number);
+		printf("ended %ld\n", ((t_ph *)(list->content))->number);
 		if (!list->next)
 			break;
 		list = list->next;
 	}
-	// ph_took_a_fork(args->philos);
-	// ph_eat(args->philos);
-	// ph_sleep(args->philos);
-	// ph_think(args->philos);
-	// ph_died(args->philos);
 	return (1);	
 }
 
@@ -164,17 +207,27 @@ int	main(int argc, char *argv[])
 		printf("generate_list failed\n");
 		return (0);
 	}
-	printf("List is written down.\n");
+	// printf("List is written down.\n");
+
+	// CREATE PHILOS //
+
+	list = init_philos(args, list);
+	if (!list)
+	{
+		printf("init philos failed");
+		return (0);
+	}
+	// printf("philosophers gathered.\n");
 
 	// CREATE THREADS //
 
 	list = init_pthreads(args, list);
 	if (!list)
 	{ 
-		printf("init_seat failed\n");
+		printf("init_ph failed\n");
 		return (0);		
 	}
-	printf("pthreads generated.\n");
+	// printf("pthreads generated.\n");
 
 	// JOIN THREADS //
 
@@ -183,10 +236,10 @@ int	main(int argc, char *argv[])
 		printf("join failed\n");
 		return (0);
 	}
-	printf("pthreads joined.\n");
+	// printf("pthreads joined.\n");
 
 
-	clear_loop_list(args, &list);
+	clear_loop_list(args->number, &list);
 	free(args);
 	return (1);
 }

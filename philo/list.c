@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/31 16:57:39 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/01/01 14:45:10 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/01/01 14:49:46 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,13 @@ void	clear_list(t_list **list)
 	}
 }
 
-void	clear_loop_list(t_args *args, t_list **list)
+void	clear_loop_list(size_t size, t_list **list)
 {
 	size_t	i;
 	t_list	*tmp;
 
 	i = 0;
-	while (i++ < args->philos)
+	while (i++ < size)
 	{
 		if (!(*list)->next)
 		{
