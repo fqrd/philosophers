@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/01 10:37:59 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/01/01 10:50:47 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/01/01 23:32:59 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int	check_digits(char *inputs)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (inputs[i])
@@ -26,9 +26,9 @@ static int	check_digits(char *inputs)
 	return (1);
 }
 
-int verifications(int argc, char *argv[])
+int	verifications(int argc, char *argv[])
 {
-	size_t i;
+	size_t	i;
 
 	i = argc;
 	while (i-- > 1)

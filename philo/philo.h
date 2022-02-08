@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:02:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/01/01 19:52:09 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/08 16:33:20 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ typedef struct s_ph
 	size_t			feed_ct;
 	size_t			sleep_ct;
 	size_t			max_turns;
+	size_t			timeout;
 }	t_ph;
 
 typedef struct s_args
@@ -52,24 +53,28 @@ int		ft_atoi(const char *str);
 char	*ft_itoa(int n);
 
 /** VERIF **/
-int verifications(int argc, char *argv[]);
+int		verifications(int argc, char *argv[]);
 
 /** LISTS **/
 t_list	*list_rewind(t_list *list);
 void	clear_list(t_list **list);
 void	clear_loop_list(size_t size, t_list **list);
 t_list	*init_list(t_list **previous);
+t_list	*generate_list(t_args *args);
 
 /** PHILO **/
 typedef struct timeval	t_timeval;
 int		build_str(char *timestamp, char *philo, char *sentence);
 int		ph_took_a_fork(size_t philo);
-int		ph_eat(size_t philo);
-int		ph_sleep(size_t philo);
+int		ph_eat(size_t philo, size_t duration, void **arg);
+int		ph_sleep(size_t philo, size_t duration);
 int		ph_think(size_t philo);
 int		ph_died(size_t philo);
 
+/** TIME **/
+int		ft_timeout(size_t timeout);
+int		still_alive(size_t time_of_death);
 
 /** DEBUG **/
-int	ph_releases_a_fork(size_t philo);
+int		ph_releases_a_fork(size_t philo);
 #endif

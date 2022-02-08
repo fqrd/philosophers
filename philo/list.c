@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/31 16:57:39 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/01/01 14:49:46 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/01/01 23:42:27 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_list	*list_rewind(t_list *list)
 {
 	while (list)
 	{
-		if(!list->prev)
+		if (!list->prev)
 			break ;
 		list = list->prev;
 	}
@@ -86,4 +86,25 @@ t_list	*init_list(t_list **previous)
 		(*previous)->next = list;
 	}
 	return (list);
+}
+
+t_list	*generate_list(t_args *args)
+{
+	size_t	i;
+	t_list	*list;
+	t_list	*first;
+
+	i = args->number;
+	list = NULL;
+	while (i-- > 0)
+	{
+		list = init_list(&list);
+		if (!list)
+			return (NULL);
+		
+	}
+	first = list_rewind(list);
+	list->next = first;
+	first->prev = list;
+	return (first);
 }

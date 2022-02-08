@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   circle.c                                           :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/21 19:05:09 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/01/01 20:04:13 by fcaquard         ###   ########.fr       */
+/*   Created: 2022/02/08 15:30:46 by fcaquard          #+#    #+#             */
+/*   Updated: 2022/02/08 17:00:02 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,24 +26,29 @@
 //	timestamp_in_ms	philo_number died
 
 /*
+memset
 printf
 malloc
 free
 write
+usleep
 gettimeofday
 pthread_create
+pthread_detach
 pthread_join
 pthread_mutex_init
+pthread_mutex_destroy
 pthread_mutex_lock,
 pthread_mutex_unlock
-
-memset
-usleep
-pthread_detach
-pthread_mutex_destroy
 */
 
-static	void *live(void *arg)
+static int ft_death(void *arg)
+{
+	ph_died(((t_ph *)(arg))->number);
+	return (1);
+}
+
+static void	*live(void *arg)
 {
 	size_t i;
 
@@ -55,21 +60,25 @@ static	void *live(void *arg)
 		{
 			ph_took_a_fork(((t_ph *)(arg))->number);
 			ph_took_a_fork(((t_ph *)(arg))->number);
-			ph_eat(((t_ph *)(arg))->number);
-			usleep(((t_ph *)(arg))->feed_ct);
-			i++;
-			if (i == ((t_ph *)(arg))->max_turns)
+			ph_eat(((t_ph *)(arg))->number, ((t_ph *)(arg))->feed_ct, &arg);
+			if (((t_ph *)(arg))->max_turns > 0)
 			{
-				return (NULL);
+				if (++i == ((t_ph *)(arg))->max_turns)
+				{
+					return (NULL);
+				}
 			}
 			pthread_mutex_unlock(&(((t_ph *)(arg))->fork_left));
 			pthread_mutex_unlock(((pthread_mutex_t *)((t_ph *)(arg))->fork_right));
 			// ph_releases_a_fork(((t_ph *)(arg))->number);
 			// ph_releases_a_fork(((t_ph *)(arg))->number);			
-			ph_sleep(((t_ph *)(arg))->number);
-			usleep(((t_ph *)(arg))->sleep_ct);
+			ph_sleep(((t_ph *)(arg))->number, ((t_ph *)(arg))->sleep_ct);
+			ph_think(((t_ph *)(arg))->number);
 		}
-		ph_think(((t_ph *)(arg))->number);
+		else
+		{
+			ph_think(((t_ph *)(arg))->number);
+		}
 		// if mutex right && left are free
 			// eat
 			// sleep
@@ -96,6 +105,7 @@ static t_list	*init_philos(t_args *args, t_list *list)
 		((t_ph *)(list->content))->feed_ct = args->feed_time;
 		((t_ph *)(list->content))->sleep_ct = args->sleep_time;
 		((t_ph *)(list->content))->max_turns = args->feed_max;
+		((t_ph *)(list->content))->timeout = 0;
 		pthread_mutex_init(&((t_ph *)(list->content))->fork_left, NULL);
 		list = list->next;
 	}
@@ -105,10 +115,14 @@ static t_list	*init_philos(t_args *args, t_list *list)
 static t_list	*init_pthreads(t_args *args, t_list *list)
 {
 	size_t	i;
+	t_timeval	tv;
 
 	i = 0;
+	if (gettimeofday(&tv, NULL) <= -1)
+		return (NULL);
 	while (i++ < args->number)
 	{
+		((t_ph *)(list->content))->timeout = tv.tv_usec + ((t_ph *)(list->content))->die_ct;
 		((t_ph *)(list->content))->fork_right = &(((t_ph *)(list->prev->content))->fork_left);
 		if (pthread_create(&(((t_ph *)(list->content))->thread), NULL, &live, list->content))
 		{
@@ -121,27 +135,6 @@ static t_list	*init_pthreads(t_args *args, t_list *list)
 		list = list->next;
 	}
 	return (list);
-}
-
-t_list	*generate_list(t_args *args)
-{
-	size_t	i;
-	t_list	*list;
-	t_list	*first;
-
-	i = args->number;
-	list = NULL;
-	while (i-- > 0)
-	{
-		list = init_list(&list);
-		if (!list)
-			return (NULL);
-		
-	}
-	first = list_rewind(list);
-	list->next = first;
-	first->prev = list;
-	return (first);
 }
 
 t_args	*init_args(int argc, char *argv[])
@@ -157,8 +150,6 @@ t_args	*init_args(int argc, char *argv[])
 	args->sleep_time = ft_atoi(argv[4]);
 	if (argc == 6)
 		args->feed_max = ft_atoi(argv[5]);
-	else
-		args->feed_max = 0;
 	return (args);
 }
 
@@ -174,7 +165,7 @@ int	join(t_args *args, t_list *list)
 			clear_loop_list(args->number, &list);
 			return (0);
 		}
-		printf("ended %ld\n", ((t_ph *)(list->content))->number);
+		// printf("ended %ld\n", ((t_ph *)(list->content))->number);
 		if (!list->next)
 			break;
 		list = list->next;
