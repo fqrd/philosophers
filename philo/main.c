@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:30:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/09 19:37:57 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/09 21:37:49 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,13 +87,11 @@ static t_list	*init_philos(t_args *args, t_list *list)
 static t_list	*init_pthreads(t_args *args, t_list *list)
 {
 	size_t	i;
-	t_timeval	tv;
 
-	while(gettimeofday(&tv, NULL) == -1) ;
 	i = 0;
 	while (i++ < args->number)
 	{
-		((t_ph *)(list->content))->timeout = (size_t)(tv.tv_usec + (long int)((t_ph *)(list->content))->die_ct);
+		((t_ph *)(list->content))->timeout = timestamp_ms() + ((t_ph *)(list->content))->die_ct;
 		((t_ph *)(list->content))->fork_right = &(((t_ph *)(list->prev->content))->fork_left);
 		if (pthread_create(&(((t_ph *)(list->content))->thread), NULL, &runtime, list->content))
 		{

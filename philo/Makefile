@@ -6,7 +6,7 @@
 #    By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/21 18:52:28 by fcaquard          #+#    #+#              #
-#    Updated: 2022/02/08 18:40:42 by fcaquard         ###   ########.fr        #
+#    Updated: 2022/02/09 22:00:46 by fcaquard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ SRCS = \
 	verifications.c	\
 	time.c			\
 	runtime.c			\
+	numbers.c			\
 
 OBJS = $(SRCS:.c=.o)
 
