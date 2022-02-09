@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:30:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/08 17:00:02 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/09 19:37:57 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,49 +42,20 @@ pthread_mutex_lock,
 pthread_mutex_unlock
 */
 
-static int ft_death(void *arg)
+static t_args	*init_args(int argc, char *argv[])
 {
-	ph_died(((t_ph *)(arg))->number);
-	return (1);
-}
+	t_args	*args;
 
-static void	*live(void *arg)
-{
-	size_t i;
-
-	i = 0;
-	while (1)
-	{
-		if (!pthread_mutex_lock(&(((t_ph *)(arg))->fork_left))
-			&& !pthread_mutex_lock(((pthread_mutex_t *)((t_ph *)(arg))->fork_right)))
-		{
-			ph_took_a_fork(((t_ph *)(arg))->number);
-			ph_took_a_fork(((t_ph *)(arg))->number);
-			ph_eat(((t_ph *)(arg))->number, ((t_ph *)(arg))->feed_ct, &arg);
-			if (((t_ph *)(arg))->max_turns > 0)
-			{
-				if (++i == ((t_ph *)(arg))->max_turns)
-				{
-					return (NULL);
-				}
-			}
-			pthread_mutex_unlock(&(((t_ph *)(arg))->fork_left));
-			pthread_mutex_unlock(((pthread_mutex_t *)((t_ph *)(arg))->fork_right));
-			// ph_releases_a_fork(((t_ph *)(arg))->number);
-			// ph_releases_a_fork(((t_ph *)(arg))->number);			
-			ph_sleep(((t_ph *)(arg))->number, ((t_ph *)(arg))->sleep_ct);
-			ph_think(((t_ph *)(arg))->number);
-		}
-		else
-		{
-			ph_think(((t_ph *)(arg))->number);
-		}
-		// if mutex right && left are free
-			// eat
-			// sleep
-		// else think
-	}
-	return (NULL);
+	args = malloc(sizeof(t_args) * 1);
+	if (!args)
+		return (NULL);
+	args->number = ft_atoi(argv[1]);
+	args->die_time = ft_atoi(argv[2]);
+	args->feed_time = ft_atoi(argv[3]);
+	args->sleep_time = ft_atoi(argv[4]);
+	if (argc == 6)
+		args->feed_max = ft_atoi(argv[5]);
+	return (args);
 }
 
 static t_list	*init_philos(t_args *args, t_list *list)
@@ -92,6 +63,7 @@ static t_list	*init_philos(t_args *args, t_list *list)
 	size_t i;
 
 	i = 0;
+
 	while (i++ < args->number)
 	{
 		list->content = malloc(sizeof(t_ph) * 1);
@@ -117,14 +89,13 @@ static t_list	*init_pthreads(t_args *args, t_list *list)
 	size_t	i;
 	t_timeval	tv;
 
+	while(gettimeofday(&tv, NULL) == -1) ;
 	i = 0;
-	if (gettimeofday(&tv, NULL) <= -1)
-		return (NULL);
 	while (i++ < args->number)
 	{
-		((t_ph *)(list->content))->timeout = tv.tv_usec + ((t_ph *)(list->content))->die_ct;
+		((t_ph *)(list->content))->timeout = (size_t)(tv.tv_usec + (long int)((t_ph *)(list->content))->die_ct);
 		((t_ph *)(list->content))->fork_right = &(((t_ph *)(list->prev->content))->fork_left);
-		if (pthread_create(&(((t_ph *)(list->content))->thread), NULL, &live, list->content))
+		if (pthread_create(&(((t_ph *)(list->content))->thread), NULL, &runtime, list->content))
 		{
 			// should clear mutex and threads !
 			// pthread_mutex_destroy(&mutex);
@@ -137,23 +108,7 @@ static t_list	*init_pthreads(t_args *args, t_list *list)
 	return (list);
 }
 
-t_args	*init_args(int argc, char *argv[])
-{
-	t_args	*args;
-
-	args = malloc(sizeof(t_args) * 1);
-	if (!args)
-		return (NULL);
-	args->number = ft_atoi(argv[1]);
-	args->die_time = ft_atoi(argv[2]);
-	args->feed_time = ft_atoi(argv[3]);
-	args->sleep_time = ft_atoi(argv[4]);
-	if (argc == 6)
-		args->feed_max = ft_atoi(argv[5]);
-	return (args);
-}
-
-int	join(t_args *args, t_list *list)
+static int	join_threads(t_args *args, t_list *list)
 {
 	size_t	i;
 
@@ -183,6 +138,8 @@ int	main(int argc, char *argv[])
 		printf("Invalid inputs\n");
 		return (0);
 	}
+
+	// Gets argv[] datas and push them into a list
 	args = init_args(argc, argv);
 	if (!args)
 	{
@@ -191,17 +148,18 @@ int	main(int argc, char *argv[])
 	}
 
 	// LIST //
-
-	list = generate_list(args);
+	// Generates a linked list of the number of philo provided
+	// Returns first element
+	list = generate_list(args->number);
 	if (!list)
 	{
 		printf("generate_list failed\n");
 		return (0);
 	}
-	// printf("List is written down.\n");
+	// printf("List's been written down.\n");
 
 	// CREATE PHILOS //
-
+	// Assigns variables to each philo
 	list = init_philos(args, list);
 	if (!list)
 	{
@@ -211,7 +169,7 @@ int	main(int argc, char *argv[])
 	// printf("philosophers gathered.\n");
 
 	// CREATE THREADS //
-
+	// Links each philo to a thread and each thread to runtime function
 	list = init_pthreads(args, list);
 	if (!list)
 	{ 
@@ -221,14 +179,13 @@ int	main(int argc, char *argv[])
 	// printf("pthreads generated.\n");
 
 	// JOIN THREADS //
-
-	if (!join(args, list))
+	// Awaits for each thread to end
+	if (!join_threads(args, list))
 	{
 		printf("join failed\n");
 		return (0);
 	}
 	// printf("pthreads joined.\n");
-
 
 	clear_loop_list(args->number, &list);
 	free(args);

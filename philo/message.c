@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 16:06:07 by fcaquard          #+#    #+#             */
-/*   Updated: 2021/12/26 16:20:20 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/09 19:08:38 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,14 @@ static char	*ft_concat(char *str, char *timestamp, char *philo, char *sentence)
 	return (str);
 }
 
+/**
+ * @brief Mallocs, concats and prints a constructed string
+ * 
+ * @param timestamp 
+ * @param philo 
+ * @param sentence 
+ * @return int Success[1], Error[0]
+ */
 int	build_str(char *timestamp, char *philo, char *sentence)
 {
 	char	*message;

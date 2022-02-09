@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/31 16:57:39 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/01/01 23:42:27 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/08 18:31:41 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,13 +88,11 @@ t_list	*init_list(t_list **previous)
 	return (list);
 }
 
-t_list	*generate_list(t_args *args)
+t_list	*generate_list(size_t i)
 {
-	size_t	i;
 	t_list	*list;
 	t_list	*first;
 
-	i = args->number;
 	list = NULL;
 	while (i-- > 0)
 	{

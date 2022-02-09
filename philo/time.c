@@ -6,38 +6,34 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:42:55 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/08 16:42:11 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/09 21:00:30 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
 
-int	ft_timeout(size_t timeout)
+int	ft_timeout(size_t duration)
 {
-	t_timeval	tv;
-
+	t_timeval	start;
+	t_timeval	now;
+	
+	while (gettimeofday(&start, NULL) == -1) ;
 	while (1)
 	{
-		while (gettimeofday(&tv, NULL) > -1)
-		{
-			if (tv.tv_usec >= (long int)timeout)
-			{
-				// printf("timeout: %ld\n", timeout);
-				return (1);
-			}
-		}
+		while (gettimeofday(&now, NULL) == -1) ;
+		if (now.tv_usec >= start.tv_usec + (long int)duration)
+			break ;
 	}
-	return (0);
+	return (1);
 }
 
 int	still_alive(size_t time_of_death)
 {
-	t_timeval	tv;
-
-	if (gettimeofday(&tv, NULL) <= -1)
-		return (0);
-	if (tv.tv_usec >= (long int)time_of_death)
-		return (0);
-	else
+	t_timeval	now;
+	
+	while (gettimeofday(&now, NULL) == -1) ;
+	if (now.tv_usec <= (long int)time_of_death)
 		return (1);
+	else
+		return (0);
 }
