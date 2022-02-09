@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:42:55 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/09 22:15:25 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/10 00:20:27 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,11 @@ int	ft_timeout(size_t duration)
 	return (1);
 }
 
-int	still_alive(size_t time_of_death)
+int	still_alive(t_ph *arg, size_t count)
 {
-	if (timestamp_ms() <= time_of_death)
-		return (1);
-	else
+	if (timestamp_ms() >= arg->timeout)
 		return (0);
+	if (arg->max_turns != 0 && count >= arg->max_turns)
+		return (0);
+	return (1);
 }

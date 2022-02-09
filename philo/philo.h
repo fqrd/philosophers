@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:02:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/09 22:03:12 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/10 00:20:13 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int		ph_died(size_t philo);
 
 /** TIME **/
 int		ft_timeout(size_t timeout);
-int		still_alive(size_t time_of_death);
+int		still_alive(t_ph *arg, size_t count);
 size_t	timestamp_ms(void);
 
 /** PROGRAM **/

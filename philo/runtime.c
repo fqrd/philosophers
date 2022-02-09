@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 18:39:41 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/09 22:33:29 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/10 00:20:43 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,9 @@ void	*runtime(void *arg)
 
 	count = 0;
 	if (((t_ph *)(arg))->number % 2 == 0)
-		usleep(1);
-	while (1)
+		ft_timeout(((t_ph *)(arg))->feed_ct / 10);
+	while (still_alive(((t_ph *)(arg)), count) 
+		&& (((t_ph *)(arg))->max_turns == 0 || count < ((t_ph *)(arg))->max_turns))
 	{
 		if (!pthread_mutex_lock(&(((t_ph *)(arg))->fork_left))
 			&& !pthread_mutex_lock(((pthread_mutex_t *)((t_ph *)(arg))->fork_right)))
@@ -30,13 +31,13 @@ void	*runtime(void *arg)
 				count++;
 				while (pthread_mutex_unlock(&(((t_ph *)(arg))->fork_left)) != 0) ;
 				while (pthread_mutex_unlock(((pthread_mutex_t *)((t_ph *)(arg))->fork_right)) != 0) ;
-				if (still_alive(((t_ph *)(arg))->timeout))
+				if (still_alive(((t_ph *)(arg)), count))
 					ph_sleep(((t_ph *)(arg))->number, ((t_ph *)(arg))->sleep_ct);
-				if (still_alive(((t_ph *)(arg))->timeout))
+				if (still_alive(((t_ph *)(arg)), count))
 					ph_think(((t_ph *)(arg))->number);
 			}
 		}
-		else // if one mutex has been locked unlock it
+		else // if one mutex has been locked in the if above unlock it
 		{
 			while (pthread_mutex_unlock(&(((t_ph *)(arg))->fork_left)) != 0) ;
 			while (pthread_mutex_unlock(((pthread_mutex_t *)((t_ph *)(arg))->fork_right)) != 0) ;	
