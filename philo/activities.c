@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:01:29 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/09 22:32:46 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/10 00:26:42 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	ph_eat(size_t philo, size_t duration)
 	sentence = "is eating";
 	if (build_str(atoi_size_t(timestamp_ms()), ft_itoa(philo), sentence))
 	{
-		return (ft_timeout(duration));
+		return (ft_pause(duration));
 	}
 	return (0);
 }
@@ -41,7 +41,7 @@ int	ph_sleep(size_t philo, size_t duration)
 	sentence = "is sleeping";
 	if (build_str(atoi_size_t(timestamp_ms()), ft_itoa(philo), sentence))
 	{
-		return (ft_timeout(duration));
+		return (ft_pause(duration));
 	}
 	return (0);
 }

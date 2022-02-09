@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:42:55 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/10 00:20:27 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/10 00:41:48 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,10 @@ size_t	timestamp_ms(void)
 
 	while (gettimeofday(&tv, NULL) == -1) ;
 	time = ((tv.tv_sec * 1000000) + tv.tv_usec) / 1000;
-	// printf("time: %ld\n", time);
 	return (time);
 }
 
-
-int	ft_timeout(size_t duration)
+int	ft_pause(size_t duration)
 {
 	size_t	start;
 	
@@ -33,7 +31,6 @@ int	ft_timeout(size_t duration)
 	{
 		if (timestamp_ms() - start >= duration)
 			break ;
-		usleep(5);
 	}
 	return (1);
 }
