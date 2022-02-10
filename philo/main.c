@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:30:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/10 00:29:56 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/10 11:45:25 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,8 @@ static t_args	*init_args(int argc, char *argv[])
 static t_list	*init_philos(t_args *args, t_list *list)
 {
 	size_t i;
-
+	
 	i = 0;
-
 	while (i++ < args->number)
 	{
 		list->content = malloc(sizeof(t_ph) * 1);
@@ -77,7 +76,8 @@ static t_list	*init_philos(t_args *args, t_list *list)
 		((t_ph *)(list->content))->feed_ct = args->feed_time;
 		((t_ph *)(list->content))->sleep_ct = args->sleep_time;
 		((t_ph *)(list->content))->max_turns = args->feed_max;
-		((t_ph *)(list->content))->timeout = 0;
+		((t_ph *)(list->content))->died = 0;
+		((t_ph *)(list->content))->time_of_death = 0;
 		pthread_mutex_init(&((t_ph *)(list->content))->fork_left, NULL);
 		list = list->next;
 	}
@@ -87,11 +87,12 @@ static t_list	*init_philos(t_args *args, t_list *list)
 static t_list	*init_pthreads(t_args *args, t_list *list)
 {
 	size_t	i;
-
+	
 	i = 0;
+	timestamp_ms();
 	while (i++ < args->number)
 	{
-		((t_ph *)(list->content))->timeout = timestamp_ms() + ((t_ph *)(list->content))->die_ct;
+		((t_ph *)(list->content))->time_of_death = ((t_ph *)(list->content))->die_ct;
 		((t_ph *)(list->content))->fork_right = &(((t_ph *)(list->prev->content))->fork_left);
 		if (pthread_create(&(((t_ph *)(list->content))->thread), NULL, &runtime, list))
 		{

@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:01:29 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/10 00:26:42 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/10 14:04:06 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,26 +22,27 @@ int	ph_took_a_fork(size_t philo)
 	return (0);
 }
 
-int	ph_eat(size_t philo, size_t duration)
+int	ph_eat(void **arg, size_t philo, size_t duration)
 {
 	char		*sentence;
 
 	sentence = "is eating";
 	if (build_str(atoi_size_t(timestamp_ms()), ft_itoa(philo), sentence))
 	{
-		return (ft_pause(duration));
+		((t_ph *)(*arg))->time_of_death = timestamp_ms() + ((t_ph *)(* arg))->die_ct;
+		return (ft_pause(arg, duration));
 	}
 	return (0);
 }
 
-int	ph_sleep(size_t philo, size_t duration)
+int	ph_sleep(void **arg, size_t philo, size_t duration)
 {
 	char		*sentence;
 
 	sentence = "is sleeping";
 	if (build_str(atoi_size_t(timestamp_ms()), ft_itoa(philo), sentence))
 	{
-		return (ft_pause(duration));
+		return (ft_pause(arg, duration));
 	}
 	return (0);
 }
