@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:42:55 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/10 14:05:37 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/10 14:28:43 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,6 @@ int	still_alive(void **arg)
 	content = (t_ph *)(*arg);
 	
 	// DEBUG
-	// if (content->number == 4)
-	// {
-	// 	size_t time = timestamp_ms();
-	// 	printf("%ld >>> death: %ld - now: %ld = %ld\n", content->number, content->time_of_death, time, content->time_of_death - time);
-	// }
-
 	size_t time = timestamp_ms();
 	if (time > content->time_of_death)
 	{

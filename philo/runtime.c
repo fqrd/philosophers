@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 18:39:41 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/10 14:06:57 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/10 14:27:54 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,40 +14,40 @@
 
 void	*runtime(void *arg)
 {
-	size_t count;
-	t_list *list;
+	size_t	count;
+	t_list	*list;
+	t_ph	*content;
 
 	count = 0;
 	list = (t_list *)(arg);
-	if (((t_ph *)(list->content))->number % 2 == 0)
+	content = ((t_ph *)(list->content));
+	if (content->number % 2 == 0)
 		ft_pause(&list->content, 1);
-	while (((t_ph *)(list->content))->died == 0 && still_alive(&list->content) && is_complete(&list->content, count))
+	while (content->died == 0 && still_alive(&list->content) && is_complete(&list->content, count))
 	{
-		if (!pthread_mutex_lock(&(((t_ph *)(list->content))->fork_left))
-			&& !pthread_mutex_lock(((pthread_mutex_t *)((t_ph *)(list->content))->fork_right)))
+		if (!pthread_mutex_lock(&(content->fork_left))
+			&& !pthread_mutex_lock(((pthread_mutex_t *)(content->fork_right))))
 		{
-			if (ph_eat(&list->content, ((t_ph *)(list->content))->number, ((t_ph *)(list->content))->feed_ct))
+			ph_took_a_fork(content->number);
+			ph_took_a_fork(content->number);
+			if (ph_eat(&list->content, content->number, content->feed_ct))
 			{
 				count++;
-				while (pthread_mutex_unlock(&(((t_ph *)(list->content))->fork_left)) != 0) ;
-				while (pthread_mutex_unlock(((pthread_mutex_t *)((t_ph *)(list->content))->fork_right)) != 0) ;
-				if (((t_ph *)(list->content))->died == 0 && still_alive(&list->content) && is_complete(&list->content, count))
-					ph_sleep(&list->content, ((t_ph *)(list->content))->number, ((t_ph *)(list->content))->sleep_ct);
-				if (((t_ph *)(list->content))->died == 0 && still_alive(&list->content) && is_complete(&list->content, count))
-					ph_think(((t_ph *)(list->content))->number);
+				while (pthread_mutex_unlock(&(content->fork_left)) != 0) ;
+				while (pthread_mutex_unlock(((pthread_mutex_t *)(content->fork_right))) != 0) ;
+				if (content->died == 0 && still_alive(&list->content) && is_complete(&list->content, count))
+					ph_sleep(&list->content, content->number, content->sleep_ct);
+				if (content->died == 0 && still_alive(&list->content) && is_complete(&list->content, count))
+					ph_think(content->number);
 			}
 		}
 		else // if one mutex has been locked in the if above unlock it
 		{
-			while (pthread_mutex_unlock(&(((t_ph *)(list->content))->fork_left)) != 0) ;
-			while (pthread_mutex_unlock(((pthread_mutex_t *)((t_ph *)(list->content))->fork_right)) != 0) ;	
+			while (pthread_mutex_unlock(&(content->fork_left)) != 0) ;
+			while (pthread_mutex_unlock(((pthread_mutex_t *)(content->fork_right))) != 0) ;	
 		}
 	}
-	if (((t_ph *)(list->content))->died == 1)
-	{
-		ph_died(((t_ph *)(list->content))->number);
-	}
-	else
-		printf("death not defined in this scope\n");
+	if (content->died == 1)
+		ph_died(content->number);
 	return (NULL);
 }

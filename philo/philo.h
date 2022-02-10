@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:02:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/10 13:49:42 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/10 14:32:36 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,7 @@
 # include <stdlib.h>	// malloc
 # include <sys/time.h>	// timestamp
 # include <pthread.h>	// threads
-
-# include <stdio.h>
-# include <errno.h>
+# include <stdio.h>		// printf
 
 typedef struct s_list
 {
@@ -50,9 +48,10 @@ typedef struct s_args
 	size_t	feed_max;
 }	t_args;
 
+typedef struct timeval	t_timeval;
+
 /** FUNCTIONS **/
 int		ft_atoi(const char *str);
-char	*ft_itoa(int n);
 char	*atoi_size_t(size_t n);
 
 /** VERIF **/
@@ -66,8 +65,6 @@ t_list	*init_list(t_list **previous);
 t_list	*generate_list(size_t i);
 
 /** PHILO **/
-typedef struct timeval	t_timeval;
-int		build_str(char *timestamp, char *philo, char *sentence);
 int		ph_took_a_fork(size_t philo);
 int		ph_eat(void **arg, size_t philo, size_t duration);
 int		ph_sleep(void **arg, size_t philo, size_t duration);
@@ -75,14 +72,12 @@ int		ph_think(size_t philo);
 int		ph_died(size_t philo);
 
 /** TIME **/
-int	ft_pause(void **arg, size_t duration);
+int		ft_pause(void **arg, size_t duration);
 int		still_alive(void **arg);
 size_t	timestamp_ms(void);
-int	is_complete(void **arg, size_t count);
+int		is_complete(void **arg, size_t count);
 
 /** PROGRAM **/
 void	*runtime(void *arg);
 
-/** DEBUG **/
-int		ph_releases_a_fork(size_t philo);
 #endif
