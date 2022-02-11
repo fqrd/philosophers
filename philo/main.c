@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:30:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/10 17:14:30 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/11 19:57:00 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ static t_list	*init_philos(t_args *args, t_list *list)
 		((t_ph *)(list->content))->died = 0;
 		((t_ph *)(list->content))->time_of_death = 0;
 		((t_ph *)(list->content))->sim_stop = 0;
+		((t_ph *)(list->content))->all_ready = 0;
 		pthread_mutex_init(&((t_ph *)(list->content))->fork_left, NULL);
 		list = list->next;
 	}
@@ -90,7 +91,6 @@ static t_list	*init_pthreads(t_args *args, t_list *list)
 	size_t	i;
 	
 	i = 0;
-	timestamp_ms();
 	while (i++ < args->number)
 	{
 		((t_ph *)(list->content))->time_of_death = ((t_ph *)(list->content))->die_ct;
@@ -108,24 +108,62 @@ static t_list	*init_pthreads(t_args *args, t_list *list)
 	return (list);
 }
 
-static int	join_threads(t_args *args, t_list *list)
+static int	kill_simulation(t_list *list)
 {
-	size_t	i;
+	t_list *start;
 
-	i = 0;
-	while (i++ < args->number)
+	// printf("killing sim\n");
+	start = list;
+	((t_ph *)(list->content))->sim_stop = 1;
+	list = list->next;
+	while (list != start)
 	{
-		if (pthread_join((((t_ph *)(list->content))->thread), NULL))
-		{
-			clear_loop_list(args->number, &list);
-			return (0);
-		}
-		// printf("ended %ld\n", ((t_ph *)(list->content))->number);
-		if (!list->next)
-			break;
+		((t_ph *)(list->content))->sim_stop = 1;
 		list = list->next;
 	}
-	return (1);	
+	return (1);
+}
+
+static int	launch_sim(t_list *list)
+{
+	t_list	*start;
+	
+	// printf("launching sim\n");
+	start = list;
+	((t_ph *)(list->content))->all_ready = 1;
+	list = list->next;
+	while (list != start)
+	{
+		((t_ph *)(list->content))->all_ready = 1;
+		list = list->next;
+	}
+	return (1);
+}
+
+static int 	manage_threads(t_list *list)
+{
+	size_t time;
+	t_ph *content;
+
+	launch_sim(list);
+	while (1)
+	{
+		time = timestamp_ms();
+		content = ((t_ph *)(list->content));
+
+		if (content->time_of_death < time)
+		{
+			if (content->sim_stop == 0)
+			{
+				printf("%ld %ld/%ld\n", content->number, time, content->time_of_death);
+				ph_died(&content, content->number);
+				kill_simulation(list);
+			}
+			break ;
+		}
+		list = list->next;
+	}
+	return (1);
 }
 
 int	main(int argc, char *argv[])
@@ -177,15 +215,7 @@ int	main(int argc, char *argv[])
 		return (0);		
 	}
 	// printf("pthreads generated.\n");
-
-	// JOIN THREADS //
-	// Awaits for each thread to end
-	if (!join_threads(args, list))
-	{
-		printf("join failed\n");
-		return (0);
-	}
-	// printf("pthreads joined.\n");
+	manage_threads(list);
 
 	clear_loop_list(args->number, &list);
 	free(args);

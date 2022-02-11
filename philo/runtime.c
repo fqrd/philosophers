@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 18:39:41 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/10 19:51:53 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/11 20:03:56 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,28 +30,6 @@ void	stop_sim(t_list **list)
 	}
 }
 
-int	await_forks(t_ph **content)
-{
-	int mutex_left;
-	int mutex_right;
-
-	while (1)
-	{
-		printf("%ld %ld is waiting...\n", timestamp_ms(), (*content)->number);
-		mutex_left = pthread_mutex_lock(&((*content)->fork_left));
-		mutex_right = pthread_mutex_lock(((pthread_mutex_t *)((*content)->fork_right)));
-		if (mutex_left == 0 && mutex_right == 0)
-		{
-			if (still_alive(content))
-				return (1);
-			else
-				return (0);
-			// printf("%ld %ld wait is over...\n", timestamp_ms(), (*content)->number);
-		}
-	}
-	return (0);
-}
-
 void	*runtime(void *arg)
 {
 	size_t	count;
@@ -62,32 +40,30 @@ void	*runtime(void *arg)
 	list = (t_list *)(arg);
 	content = ((t_ph *)(list->content));
 
+	while (content->all_ready == 0) ;
 	if (content->number % 2 == 0)
-		ft_pause(&content, 2);
+		ft_pause(&content, 50);
 	while (content->sim_stop == 0)
 	{
-		if (await_forks(&content))
+		if (!pthread_mutex_lock(&(content->fork_left))
+			&& !pthread_mutex_lock(((pthread_mutex_t *)(content->fork_right)))
+				&& still_alive(&content))
 		{
-			ph_took_a_fork(content->number);
-			ph_took_a_fork(content->number);
+			ph_took_a_fork(&content, content->number);
+			ph_took_a_fork(&content, content->number);
 			if (ph_eat(&content, content->number, content->feed_ct))
 			{
-				count++;
 				while (pthread_mutex_unlock(&(content->fork_left)) != 0) ;
-				while (pthread_mutex_unlock(((pthread_mutex_t *)(content->fork_right))) != 0) ;
-				if (content->sim_stop == 0 && still_alive(&content) && is_complete(&content, count))
-					ph_sleep(&content, content->number, content->sleep_ct);
-				if (content->sim_stop == 0 && still_alive(&content) && is_complete(&content, count))
-					ph_think(content->number);
+				while (pthread_mutex_unlock((pthread_mutex_t *)(content->fork_right)) != 0) ;
+				if (content->max_turns != 0 && ++count >= content->max_turns)
+				{
+					content->sim_stop = 1;
+					printf("max turns attained\n");
+					break ;
+				}
+				ph_sleep(&content, content->number, content->sleep_ct);
+				ph_think(&content, content->number);
 			}
-		}
-	}
-	if (content->sim_stop == 1)
-	{
-		if (content->died == 1)
-		{
-			ph_died(content->number);
-			stop_sim(&list);
 		}
 	}
 	return (NULL);

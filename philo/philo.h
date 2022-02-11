@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:02:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/10 18:46:23 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/11 19:37:39 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,17 @@ typedef struct s_ph
 	pthread_t		thread;
 	pthread_mutex_t	fork_left;
 	void			*fork_right;
+	int				eats;
+	int				sleeps;
+	int				thinks;
+	int				died;
+	int				sim_stop;
+	int				all_ready;
 	size_t			die_ct;
 	size_t			feed_ct;
 	size_t			sleep_ct;
 	size_t			max_turns;
 	size_t			time_of_death;
-	size_t			died;
-	size_t			sim_stop;
 }	t_ph;
 
 typedef struct s_args
@@ -68,11 +72,11 @@ t_list	*init_list(t_list **previous);
 t_list	*generate_list(size_t i);
 
 /** PHILO **/
-int		ph_took_a_fork(size_t philo);
+int		ph_took_a_fork(t_ph **arg, size_t philo);
 int		ph_eat(t_ph **arg, size_t philo, size_t duration);
 int		ph_sleep(t_ph **arg, size_t philo, size_t duration);
-int		ph_think(size_t philo);
-int		ph_died(size_t philo);
+int		ph_think(t_ph **arg, size_t philo);
+int		ph_died(t_ph **arg, size_t philo);
 
 /** TIME **/
 int		ft_pause(t_ph **arg, size_t duration);
