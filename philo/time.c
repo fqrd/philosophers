@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:42:55 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/10 14:28:43 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/10 19:34:42 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,43 +25,39 @@ size_t	timestamp_ms()
 	return (time - simulation_start);
 }
 
-int	ft_pause(void **arg, size_t duration)
+int	ft_pause(t_ph **arg, size_t duration)
 {
 	size_t	start;
 	
+	(void)**arg;
+
 	start = timestamp_ms();
 	while (1)
 	{
-		if (!still_alive(arg)
-			|| timestamp_ms() - start >= duration)
-			break ;
+		if (timestamp_ms() - start >= duration)
+			return (1);
 	}
-	return (1);
+	return (0);
 }
 
-int	still_alive(void **arg)
+int	still_alive(t_ph **arg)
 {
-	t_ph *content;
+	size_t now;
 
-	content = (t_ph *)(*arg);
-	
-	// DEBUG
-	size_t time = timestamp_ms();
-	if (time > content->time_of_death)
+	now = timestamp_ms();
+	if (now > (size_t)(*arg)->time_of_death)
 	{
-		printf("DIED: %ld -> %ld @ %ld\n", content->number, content->time_of_death, time);
-		content->died = 1;
+		(*arg)->died = 1;
+		(*arg)->sim_stop = 1;
+		printf("died: %ld stopped: %ld\n", (*arg)->died, (*arg)->sim_stop);
 		return (0);
 	}
 	return (1);
 }
 
-int	is_complete(void **arg, size_t count)
+int	is_complete(t_ph **arg, size_t count)
 {
-	t_ph *content;
-
-	content = (t_ph *)(*arg);
-	if (content->max_turns != 0 && count >= content->max_turns)
+	if ((*arg)->max_turns != 0 && count >= (*arg)->max_turns)
 		return (0);
 	return (1);	
 }

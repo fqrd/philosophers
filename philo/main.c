@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:30:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/10 14:27:55 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/10 17:14:30 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ static t_list	*init_philos(t_args *args, t_list *list)
 		((t_ph *)(list->content))->max_turns = args->feed_max;
 		((t_ph *)(list->content))->died = 0;
 		((t_ph *)(list->content))->time_of_death = 0;
+		((t_ph *)(list->content))->sim_stop = 0;
 		pthread_mutex_init(&((t_ph *)(list->content))->fork_left, NULL);
 		list = list->next;
 	}

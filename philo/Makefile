@@ -6,7 +6,7 @@
 #    By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/21 18:52:28 by fcaquard          #+#    #+#              #
-#    Updated: 2022/02/10 14:32:11 by fcaquard         ###   ########.fr        #
+#    Updated: 2022/02/10 17:51:52 by fcaquard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,8 @@ SRCS = \
 	time.c				\
 	runtime.c			\
 	numbers.c			\
+	ft_itoa.c				\
+	messages.c			\
 
 OBJS = $(SRCS:.c=.o)
 
