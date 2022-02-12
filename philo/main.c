@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:30:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/12 18:24:46 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/12 18:28:51 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,15 +68,13 @@ static int	launch_sim(t_list *list)
 
 static int	manage_threads(t_list *list)
 {
-	size_t	time;
 	t_ph	*content;
 
 	launch_sim(list);
 	while (1)
 	{
-		time = timestamp_ms();
 		content = ((t_ph *)(list->content));
-		if (content->time_of_death < time)
+		if (content->time_of_death < timestamp_ms())
 		{
 			if (content->sim_stop == 0)
 			{
