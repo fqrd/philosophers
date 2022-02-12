@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:02:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/11 19:37:39 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/12 17:30:31 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,19 +57,16 @@ typedef struct timeval	t_timeval;
 
 /** FUNCTIONS **/
 int		ft_atoi(const char *str);
-char	*atoi_size_t(size_t n);
-int		build_str(char *timestamp, char *philo, char *sentence);
-char	*ft_itoa(int n);
 
 /** VERIF **/
 int		verifications(int argc, char *argv[]);
 
 /** LISTS **/
-t_list	*list_rewind(t_list *list);
-void	clear_list(t_list **list);
+// t_list	*list_rewind(t_list *list);
+// void	clear_list(t_list **list);
 void	clear_loop_list(size_t size, t_list **list);
-t_list	*init_list(t_list **previous);
 t_list	*generate_list(size_t i);
+// t_list	*init_list(t_list **previous);
 
 /** PHILO **/
 int		ph_took_a_fork(t_ph **arg, size_t philo);
