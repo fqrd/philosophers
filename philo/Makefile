@@ -6,7 +6,7 @@
 #    By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/21 18:52:28 by fcaquard          #+#    #+#              #
-#    Updated: 2022/02/12 17:29:46 by fcaquard         ###   ########.fr        #
+#    Updated: 2022/02/12 18:16:24 by fcaquard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ CFLAGS = -Wall -Werror -Wextra
 NAME = philo
 SRCS = \
 	ft_atoi.c			\
+	preparation.c		\
 	activities.c		\
 	main.c				\
 	list.c				\
