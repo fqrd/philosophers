@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 18:39:41 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/11 20:03:56 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/12 11:52:32 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	*runtime(void *arg)
 				if (content->max_turns != 0 && ++count >= content->max_turns)
 				{
 					content->sim_stop = 1;
-					printf("max turns attained\n");
+					printf("max turns attained %ld\n", count);
 					break ;
 				}
 				ph_sleep(&content, content->number, content->sleep_ct);

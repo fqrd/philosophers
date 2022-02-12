@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:42:55 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/11 19:34:16 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/12 11:49:57 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int	ft_pause(t_ph **arg, size_t duration)
 	{
 		if (timestamp_ms() - start >= duration)
 			return (1);
+		usleep(100);
 	}
 	return (0);
 }
