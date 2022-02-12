@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:02:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/12 17:34:24 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/12 18:16:55 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ int		ft_atoi(const char *str);
 
 /** VERIF **/
 int		verifications(int argc, char *argv[]);
+int	preparation(int argc, char *argv[], t_args **args, t_list **list);
 
 /** LISTS **/
 void	clear_loop_list(size_t size, t_list **list);
