@@ -6,17 +6,11 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:01:29 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/12 17:26:14 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/12 17:50:43 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-//	timestamp_in_ms	philo_number has taken a fork
-//	timestamp_in_ms	philo_number is eating
-//	timestamp_in_ms	philo_number is sleeping
-//	timestamp_in_ms	philo_number is thinking
-//	timestamp_in_ms	philo_number died
 
 int	ph_took_a_fork(t_ph **arg, size_t philo)
 {
