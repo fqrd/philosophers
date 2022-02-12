@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:02:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/12 17:30:31 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/12 17:34:24 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ typedef struct s_ph
 	void			*fork_right;
 	int				eats;
 	int				sleeps;
-	int				thinks;
 	int				died;
 	int				sim_stop;
 	int				all_ready;
@@ -62,11 +61,8 @@ int		ft_atoi(const char *str);
 int		verifications(int argc, char *argv[]);
 
 /** LISTS **/
-// t_list	*list_rewind(t_list *list);
-// void	clear_list(t_list **list);
 void	clear_loop_list(size_t size, t_list **list);
 t_list	*generate_list(size_t i);
-// t_list	*init_list(t_list **previous);
 
 /** PHILO **/
 int		ph_took_a_fork(t_ph **arg, size_t philo);
@@ -76,10 +72,9 @@ int		ph_think(t_ph **arg, size_t philo);
 int		ph_died(t_ph **arg, size_t philo);
 
 /** TIME **/
+size_t	timestamp_ms(void);
 int		ft_pause(t_ph **arg, size_t duration);
 int		still_alive(t_ph **arg);
-size_t	timestamp_ms(void);
-int		is_complete(t_ph **arg, size_t count);
 
 /** PROGRAM **/
 void	*runtime(void *arg);
