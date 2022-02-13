@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 18:12:18 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/12 18:20:28 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/13 11:48:12 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,29 +56,48 @@ static t_list	*init_philos(t_args *args, t_list *list)
 	return (list);
 }
 
+static int	verifications(int argc, char *argv[])
+{
+	size_t	i;
+	size_t	j;
+
+	i = argc;
+	while (i-- > 1)
+	{
+		j = 0;
+		while (argv[i] && argv[i][j])
+		{
+			if (argv[i][j] > '9' || argv[i][j] < '0')
+				return (0);
+			j++;
+		}
+	}
+	return (1);
+}
+
 int	preparation(int argc, char *argv[], t_args **args, t_list **list)
 {
 	if (argc < 5 || argc > 6 || !verifications(argc, argv))
 	{
-		printf("Invalid inputs\n");
+		printf("Error: Invalid input.\n");
 		return (0);
 	}
 	*args = init_args(argc, argv);
 	if (!(*args))
 	{
-		printf("args init failed\n");
+		printf("Error: Arguments list generation failed. (malloc)\n");
 		return (0);
 	}
 	*list = generate_list((*args)->number);
 	if (!(*list))
 	{
-		printf("generate_list failed\n");
+		printf("Error: Threads list generation failed. (malloc)\n");
 		return (0);
 	}
 	*list = init_philos(*args, *list);
 	if (!(*list))
 	{
-		printf("init philos failed");
+		printf("Error: Philosophers initialization failed. (malloc)");
 		return (0);
 	}
 	return (1);

@@ -6,7 +6,7 @@
 #    By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/21 18:52:28 by fcaquard          #+#    #+#              #
-#    Updated: 2022/02/12 18:16:24 by fcaquard         ###   ########.fr        #
+#    Updated: 2022/02/13 11:21:05 by fcaquard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,6 @@ SRCS = \
 	activities.c		\
 	main.c				\
 	list.c				\
-	verifications.c		\
 	time.c				\
 	runtime.c			\
 

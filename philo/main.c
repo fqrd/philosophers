@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:30:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/12 18:28:51 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/13 11:48:39 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ static int	manage_threads(t_list *list)
 		content = ((t_ph *)(list->content));
 		if (content->time_of_death < timestamp_ms())
 		{
+			// should place a mutex here
 			if (content->sim_stop == 0)
 			{
 				ph_died(&content, content->number);
@@ -93,12 +94,17 @@ int	main(int argc, char *argv[])
 	t_args	*args;
 	t_list	*list;
 
+	args = NULL;
 	if (!preparation(argc, argv, &args, &list))
+	{
+		if (args)
+			free(args);
 		return (0);
+	}
 	list = init_pthreads(args, list);
 	if (!list)
 	{
-		printf("init_ph failed\n");
+		free(args);
 		return (0);
 	}
 	manage_threads(list);
