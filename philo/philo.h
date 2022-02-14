@@ -6,17 +6,17 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:02:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/14 16:04:57 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/14 18:33:50 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
-# include <unistd.h>	// write
-# include <stdlib.h>	// malloc
-# include <sys/time.h>	// timestamp
-# include <pthread.h>	// threads
-# include <stdio.h>		// printf
+# include <unistd.h>
+# include <stdlib.h>
+# include <sys/time.h>
+# include <pthread.h>
+# include <stdio.h>
 
 typedef struct s_list
 {
@@ -78,10 +78,5 @@ int		still_alive(t_ph **arg);
 void	*runtime(void *arg);
 
 /** CLEAN **/
-int		clean(t_list **args);
-// int		clear_mutexes(t_list **args);
-// void	clear_loop_list(t_list **list);
 int		clear(t_list **list, t_args **args);
-
-
 #endif

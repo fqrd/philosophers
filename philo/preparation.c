@@ -6,13 +6,12 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 18:12:18 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/14 16:04:52 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/14 18:33:19 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
 
-// list doesn't exist yet, if fails args doesn't exist neither
 static t_args	*init_args(int argc, char *argv[])
 {
 	t_args	*args;
@@ -42,14 +41,10 @@ static int	populate_philo(t_args **args, t_ph *content)
 	if (pthread_mutex_init(&content->fork_left, NULL) != 0)
 		return (0);
 	if (pthread_mutex_init(&content->death_protection, NULL) != 0)
-	{
-		pthread_mutex_destroy(&content->fork_left);
 		return (0);
-	}
 	return (1);
 }
 
-// error: clears list and args
 static t_list	*init_philos(t_args **args, t_list *list)
 {
 	size_t	i;

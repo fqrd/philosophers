@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:01:29 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/14 16:03:55 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/14 17:55:12 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,17 @@ int	ph_eat(t_ph **arg, size_t philo, size_t duration)
 
 	if (pthread_mutex_lock(&(*arg)->death_protection) == 0)
 	{
-		// printf("%ld eat: mutex locked\n", philo);
 		if (!still_alive(arg))
+		{
+			while (pthread_mutex_unlock(&(*arg)->death_protection) != 0)
+				;
 			return (0);
+		}
 		time = timestamp_ms();
 		(*arg)->time_of_death = time + (*arg)->die_ct;
 		printf("%ld %ld is eating\n", time, philo);
 		while (pthread_mutex_unlock(&(*arg)->death_protection) != 0)
 			;
-		// printf("%ld eat: mutex unlocked\n", philo);
 		ft_pause(arg, duration);
 	}
 	return (1);

@@ -6,13 +6,12 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/31 16:57:39 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/14 14:14:45 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/14 18:33:36 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-// only used up until the list is a loop 
 static t_list	*list_rewind(t_list *list)
 {
 	while (list)
@@ -24,7 +23,6 @@ static t_list	*list_rewind(t_list *list)
 	return (list);
 }
 
-// uses list_rewind, so only if the list isn't a loop
 static void	clear_list(t_list **list)
 {
 	t_list	*tmp;
@@ -47,7 +45,6 @@ static void	clear_list(t_list **list)
 	}
 }
 
-// clears the whole list on error
 static t_list	*init_list(t_list **previous)
 {
 	t_list	*list;
@@ -68,7 +65,6 @@ static t_list	*init_list(t_list **previous)
 	return (list);
 }
 
-// error: list already cleared in init_list, clears args
 t_list	*generate_list(t_args **args)
 {
 	size_t	i;
