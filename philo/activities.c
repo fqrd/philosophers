@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:01:29 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/12 17:50:43 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/14 11:20:06 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,23 @@ int	ph_eat(t_ph **arg, size_t philo, size_t duration)
 {
 	size_t	time;
 
-	if (!still_alive(arg))
-		return (0);
-	time = timestamp_ms();
-	(*arg)->eats = 1;
-	(*arg)->time_of_death = time + (*arg)->die_ct;
-	printf("%ld %ld is eating\n", time, philo);
-	ft_pause(arg, duration);
-	(*arg)->eats = 0;
+	if (!pthread_mutex_lock(&((*arg)->death_protection)))
+	{
+		printf("eat: mutex locked\n");
+		if (!still_alive(arg))
+		{
+			while (pthread_mutex_unlock(&((*arg)->death_protection)) != 0)
+				;
+			return (0);
+		}
+		time = timestamp_ms();
+		(*arg)->time_of_death = time + (*arg)->die_ct;
+		printf("%ld %ld is eating\n", time, philo);
+		while (pthread_mutex_unlock(&(*arg)->death_protection) != 0)
+			;
+		printf("eat: mutex unlocked\n");
+		ft_pause(arg, duration);
+	}
 	return (1);
 }
 
@@ -39,10 +48,8 @@ int	ph_sleep(t_ph **arg, size_t philo, size_t duration)
 {
 	if (!still_alive(arg))
 		return (0);
-	(*arg)->sleeps = 1;
 	printf("%ld %ld is sleeping\n", timestamp_ms(), philo);
 	ft_pause(arg, duration);
-	(*arg)->sleeps = 0;
 	return (1);
 }
 

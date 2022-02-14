@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:02:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/13 11:48:21 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/14 11:30:22 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,9 @@ typedef struct s_ph
 {
 	size_t			number;
 	pthread_t		thread;
+	pthread_mutex_t	death_protection;
 	pthread_mutex_t	fork_left;
 	void			*fork_right;
-	int				eats;
-	int				sleeps;
 	int				died;
 	int				sim_stop;
 	int				all_ready;
@@ -61,8 +60,8 @@ int		ft_atoi(const char *str);
 int		preparation(int argc, char *argv[], t_args **args, t_list **list);
 
 /** LISTS **/
-void	clear_loop_list(size_t size, t_list **list);
-t_list	*generate_list(size_t i);
+void	clear_loop_list(size_t size, t_list **list, int clear_mutex);
+t_list	*generate_list(t_args **args);
 
 /** PHILO **/
 int		ph_took_a_fork(t_ph **arg, size_t philo);

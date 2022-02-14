@@ -6,12 +6,13 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 18:12:18 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/13 11:48:12 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/14 11:44:04 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
 
+// list doesn't exist yet, if fails args doesn't exist neither
 static t_args	*init_args(int argc, char *argv[])
 {
 	t_args	*args;
@@ -28,29 +29,48 @@ static t_args	*init_args(int argc, char *argv[])
 	return (args);
 }
 
-static t_list	*init_philos(t_args *args, t_list *list)
+static int	populate_philo(t_args **args, t_ph *content)
+{
+	content->die_ct = (*args)->die_time;
+	content->feed_ct = (*args)->feed_time;
+	content->sleep_ct = (*args)->sleep_time;
+	content->max_turns = (*args)->feed_max;
+	content->died = 0;
+	content->time_of_death = 0;
+	content->sim_stop = 0;
+	content->all_ready = 0;
+	if (pthread_mutex_init(&content->fork_left, NULL) != 0)
+		return (0);
+	if (pthread_mutex_init(&content->death_protection, NULL) != 0)
+	{
+		pthread_mutex_destroy(&content->fork_left);
+		return (0);
+	}
+	return (1);
+}
+
+// error: clears list and args
+static t_list	*init_philos(t_args **args, t_list *list)
 {
 	size_t	i;
 
 	i = 0;
-	while (i++ < args->number)
+	while (i++ < (*args)->number)
 	{
 		list->content = malloc(sizeof(t_ph) * 1);
 		if (!list->content)
 		{
-			clear_loop_list(args->number, &list);
+			clear_loop_list((*args)->number, &list, 0);
+			free(args);
 			return (NULL);
 		}
 		((t_ph *)(list->content))->number = i;
-		((t_ph *)(list->content))->die_ct = args->die_time;
-		((t_ph *)(list->content))->feed_ct = args->feed_time;
-		((t_ph *)(list->content))->sleep_ct = args->sleep_time;
-		((t_ph *)(list->content))->max_turns = args->feed_max;
-		((t_ph *)(list->content))->died = 0;
-		((t_ph *)(list->content))->time_of_death = 0;
-		((t_ph *)(list->content))->sim_stop = 0;
-		((t_ph *)(list->content))->all_ready = 0;
-		pthread_mutex_init(&((t_ph *)(list->content))->fork_left, NULL);
+		if (!populate_philo(args, (t_ph *)(list->content)))
+		{
+			clear_loop_list((*args)->number, &list, 0);
+			free(args);
+			return (NULL);
+		}
 		list = list->next;
 	}
 	return (list);
@@ -88,13 +108,13 @@ int	preparation(int argc, char *argv[], t_args **args, t_list **list)
 		printf("Error: Arguments list generation failed. (malloc)\n");
 		return (0);
 	}
-	*list = generate_list((*args)->number);
+	*list = generate_list(args);
 	if (!(*list))
 	{
 		printf("Error: Threads list generation failed. (malloc)\n");
 		return (0);
 	}
-	*list = init_philos(*args, *list);
+	*list = init_philos(args, *list);
 	if (!(*list))
 	{
 		printf("Error: Philosophers initialization failed. (malloc)");

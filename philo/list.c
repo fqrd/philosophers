@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/31 16:57:39 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/12 17:03:06 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/14 11:47:29 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,11 +68,12 @@ static t_list	*init_list(t_list **previous)
 	return (list);
 }
 
-void	clear_loop_list(size_t size, t_list **list)
+void	clear_loop_list(size_t size, t_list **list, int clear_mutex)
 {
 	size_t	i;
 	t_list	*tmp;
 
+	(void)clear_mutex;
 	i = 0;
 	while (i++ < size)
 	{
@@ -91,18 +92,23 @@ void	clear_loop_list(size_t size, t_list **list)
 	}
 }
 
-// returns NULL on error (list already cleared)
-t_list	*generate_list(size_t i)
+// error: list already cleared in init_list, clears args
+t_list	*generate_list(t_args **args)
 {
+	size_t	i;
 	t_list	*list;
 	t_list	*first;
 
+	i = (*args)->number;
 	list = NULL;
 	while (i-- > 0)
 	{
 		list = init_list(&list);
 		if (!list)
+		{
+			free(args);
 			return (NULL);
+		}
 	}
 	first = list_rewind(list);
 	list->next = first;
