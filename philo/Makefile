@@ -6,7 +6,7 @@
 #    By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/21 18:52:28 by fcaquard          #+#    #+#              #
-#    Updated: 2022/02/13 11:21:05 by fcaquard         ###   ########.fr        #
+#    Updated: 2022/02/14 12:26:17 by fcaquard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,7 @@ SRCS = \
 	list.c				\
 	time.c				\
 	runtime.c			\
+	cleaner.c			\
 
 OBJS = $(SRCS:.c=.o)
 

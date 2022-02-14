@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/31 16:57:39 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/14 11:47:29 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/14 14:14:45 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,30 +66,6 @@ static t_list	*init_list(t_list **previous)
 		(*previous)->next = list;
 	}
 	return (list);
-}
-
-void	clear_loop_list(size_t size, t_list **list, int clear_mutex)
-{
-	size_t	i;
-	t_list	*tmp;
-
-	(void)clear_mutex;
-	i = 0;
-	while (i++ < size)
-	{
-		if (!(*list)->next)
-		{
-			if ((*list)->content)
-				free((*list)->content);
-			free(*list);
-			break ;
-		}
-		tmp = (*list)->next;
-		if ((*list)->content)
-			free((*list)->content);
-		free(*list);
-		*list = tmp;
-	}
 }
 
 // error: list already cleared in init_list, clears args

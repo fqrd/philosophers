@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:02:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/14 11:30:22 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/14 16:04:57 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ int		ft_atoi(const char *str);
 int		preparation(int argc, char *argv[], t_args **args, t_list **list);
 
 /** LISTS **/
-void	clear_loop_list(size_t size, t_list **list, int clear_mutex);
 t_list	*generate_list(t_args **args);
 
 /** PHILO **/
@@ -77,5 +76,12 @@ int		still_alive(t_ph **arg);
 
 /** PROGRAM **/
 void	*runtime(void *arg);
+
+/** CLEAN **/
+int		clean(t_list **args);
+// int		clear_mutexes(t_list **args);
+// void	clear_loop_list(t_list **list);
+int		clear(t_list **list, t_args **args);
+
 
 #endif

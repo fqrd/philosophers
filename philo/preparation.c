@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 18:12:18 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/14 11:44:04 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/14 16:04:52 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,15 +60,13 @@ static t_list	*init_philos(t_args **args, t_list *list)
 		list->content = malloc(sizeof(t_ph) * 1);
 		if (!list->content)
 		{
-			clear_loop_list((*args)->number, &list, 0);
-			free(args);
+			clear(&list, args);
 			return (NULL);
 		}
 		((t_ph *)(list->content))->number = i;
 		if (!populate_philo(args, (t_ph *)(list->content)))
 		{
-			clear_loop_list((*args)->number, &list, 0);
-			free(args);
+			clear(&list, args);
 			return (NULL);
 		}
 		list = list->next;
