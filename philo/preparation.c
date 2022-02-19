@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 18:12:18 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/19 15:25:16 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/19 15:27:50 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ static t_args	*init_args(int argc, char *argv[])
 	args->sleep_time = ft_atoi(argv[4]);
 	if (argc == 6)
 		args->feed_max = ft_atoi(argv[5]);
+	if (pthread_mutex_init(&args->write_mutex, NULL) != 0)
+		return (NULL);
 	return (args);
 }
 

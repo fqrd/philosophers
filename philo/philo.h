@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:02:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/19 15:25:12 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/19 15:27:00 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,12 @@ typedef struct s_ph
 
 typedef struct s_args
 {
-	size_t	number;
-	size_t	die_time;
-	size_t	feed_time;
-	size_t	sleep_time;
-	size_t	feed_max;
+	size_t			number;
+	size_t			die_time;
+	size_t			feed_time;
+	size_t			sleep_time;
+	size_t			feed_max;
+	pthread_mutex_t	write_mutex;
 
 }	t_args;
 
