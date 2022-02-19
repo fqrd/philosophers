@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:02:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/19 19:16:03 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/19 19:48:28 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,5 @@ void	*runtime(void *arg);
 
 /** CLEAN **/
 int		clear(t_list **list, t_args **args);
+int		clear_args(t_args **args);
 #endif

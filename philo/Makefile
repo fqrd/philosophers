@@ -6,7 +6,7 @@
 #    By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/21 18:52:28 by fcaquard          #+#    #+#              #
-#    Updated: 2022/02/14 12:26:17 by fcaquard         ###   ########.fr        #
+#    Updated: 2022/02/19 19:40:16 by fcaquard         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ OBJS = $(SRCS:.c=.o)
 all : $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -pthread -lbsd -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) -pthread -o $(NAME)
 
 clean:
 	rm -f ./*.o
