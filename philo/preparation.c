@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 18:12:18 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/19 19:52:55 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/19 22:19:37 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ static t_args	*init_args(int argc, char *argv[])
 		args->feed_max = ft_atoi(argv[5]);
 	args->simulation_off = 0;
 	args->threads_completed = 0;
+	args->threads_stopped_count = 0;
 	return (args);
 }
 
@@ -49,6 +50,8 @@ static int	populate_philo(t_args **args, t_ph *c)
 	if (pthread_mutex_init(&c->args->simulation_mutex, NULL) != 0)
 		return (0);
 	if (pthread_mutex_init(&c->args->completed_mutex, NULL) != 0)
+		return (0);
+	if (pthread_mutex_init(&c->args->thread_stopped_mutex, NULL) != 0)
 		return (0);
 	return (1);
 }

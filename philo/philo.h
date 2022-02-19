@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:02:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/19 19:48:28 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/19 22:07:41 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ typedef struct s_args
 	size_t			threads_completed;
 	pthread_mutex_t	simulation_mutex;
 	int				simulation_off;
+	pthread_mutex_t	thread_stopped_mutex;
+	size_t			threads_stopped_count;
 
 }	t_args;
 

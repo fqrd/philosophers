@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 18:39:41 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/19 19:18:34 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/19 22:25:55 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,15 @@ static int	eat_sleep_work(t_ph *c, size_t *count)
 	return (1);
 }
 
+static void	stopping_thread(t_ph *c)
+{
+	if (pthread_mutex_lock(&c->args->thread_stopped_mutex) == 0)
+	{
+		c->args->threads_stopped_count++;
+		pthread_mutex_unlock(&c->args->thread_stopped_mutex);
+	}	
+}
+
 void	*runtime(void *list)
 {
 	size_t	count;
@@ -81,5 +90,6 @@ void	*runtime(void *list)
 		if (!eat_sleep_work(c, &count))
 			break ;
 	}
+	stopping_thread(c);
 	return (NULL);
 }
