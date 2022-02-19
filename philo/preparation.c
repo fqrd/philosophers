@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 18:12:18 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/14 18:33:19 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/19 15:25:16 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,7 @@ static t_args	*init_args(int argc, char *argv[])
 
 static int	populate_philo(t_args **args, t_ph *content)
 {
-	content->die_ct = (*args)->die_time;
-	content->feed_ct = (*args)->feed_time;
-	content->sleep_ct = (*args)->sleep_time;
-	content->max_turns = (*args)->feed_max;
+	content->args = *args;
 	content->died = 0;
 	content->time_of_death = 0;
 	content->sim_stop = 0;

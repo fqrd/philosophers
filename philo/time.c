@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:42:55 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/12 17:12:11 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/19 15:18:24 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ size_t	timestamp_ms(void)
 	return (time - simulation_start);
 }
 
-int	ft_pause(t_ph **arg, size_t duration)
+int	ft_pause(t_ph **content, size_t duration)
 {
 	size_t	start;
 
 	start = timestamp_ms();
-	while (still_alive(arg))
+	while (still_alive(content))
 	{
 		if (timestamp_ms() - start >= duration)
 			return (1);
@@ -40,9 +40,9 @@ int	ft_pause(t_ph **arg, size_t duration)
 	return (0);
 }
 
-int	still_alive(t_ph **arg)
+int	still_alive(t_ph **content)
 {
-	if ((*arg)->died == 1 || (*arg)->sim_stop == 1)
+	if ((*content)->died == 1 || (*content)->sim_stop == 1)
 		return (0);
 	return (1);
 }

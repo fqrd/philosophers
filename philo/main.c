@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:30:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/14 18:19:21 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/19 15:21:53 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static t_list	*init_pthreads(t_args **args, t_list *list)
 		if (!start)
 			start = list;
 		content = (t_ph *)(list->content);
-		content->time_of_death = content->die_ct;
+		content->time_of_death = content->args->die_time;
 		if (list->prev != list)
 			content->fork_right = &(((t_ph *)(list->prev->content))->fork_left);
 		else
