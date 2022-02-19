@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 12:10:39 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/19 19:16:22 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/19 19:23:06 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,10 +100,8 @@ int	clear(t_list **list, t_args **args)
 {
 	if (!terminate_threads(list))
 		return (0);
-	printf("MUTEXES\n");
 	if (!destroy_mutexes(list))
 		return (0);
-	printf("PHILOS\n");
 	if (!clear_philosophers(list))
 		return (0);
 	if (!clear_args(args))
