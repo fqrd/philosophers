@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 18:12:18 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/19 15:27:50 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/19 19:16:00 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,23 @@ static t_args	*init_args(int argc, char *argv[])
 		args->feed_max = ft_atoi(argv[5]);
 	if (pthread_mutex_init(&args->write_mutex, NULL) != 0)
 		return (NULL);
+	if (pthread_mutex_init(&args->simulation_mutex, NULL) != 0)
+		return (NULL);
+	if (pthread_mutex_init(&args->completed_mutex, NULL) != 0)
+		return (NULL);
+	args->simulation_off = 0;
+	args->threads_completed = 0;
 	return (args);
 }
 
-static int	populate_philo(t_args **args, t_ph *content)
+static int	populate_philo(t_args **args, t_ph *c)
 {
-	content->args = *args;
-	content->died = 0;
-	content->time_of_death = 0;
-	content->sim_stop = 0;
-	content->all_ready = 0;
-	if (pthread_mutex_init(&content->fork_left, NULL) != 0)
+	c->args = *args;
+	c->time_of_death = 0;
+	c->thread_active = 0;
+	if (pthread_mutex_init(&c->fork_left, NULL) != 0)
 		return (0);
-	if (pthread_mutex_init(&content->death_protection, NULL) != 0)
+	if (pthread_mutex_init(&c->death_protection, NULL) != 0)
 		return (0);
 	return (1);
 }

@@ -6,57 +6,79 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 18:39:41 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/19 15:24:50 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/19 19:18:34 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./philo.h"
 
-static int	eat_sleep_work(t_ph *content, size_t *count)
+static int	is_complete(t_ph *c)
+{
+	if (pthread_mutex_lock(&c->args->completed_mutex) == 0)
+	{
+		if (++c->args->threads_completed >= c->args->number)
+		{
+			if (pthread_mutex_lock(&c->args->simulation_mutex) == 0)
+			{
+				if (c->args->simulation_off == 0)
+					c->args->simulation_off = 1;
+				c->thread_active = 0;
+				pthread_mutex_unlock(&c->args->completed_mutex);
+				pthread_mutex_unlock(&c->args->simulation_mutex);
+				return (1);
+			}
+		}
+		pthread_mutex_unlock(&c->args->completed_mutex);
+	}
+	return (0);
+}
+
+static int	eat_sleep_work(t_ph *c, size_t *count)
 {
 	int	res;
 
-	res = ph_eat(&content, content->number, content->args->feed_time);
-	while (pthread_mutex_unlock(&content->fork_left) != 0)
-		;
-	while (pthread_mutex_unlock(content->fork_right) != 0)
-		;
+	res = ph_eat(&c, c->number, c->args->feed_time);
+	pthread_mutex_unlock(&c->fork_left);
+	pthread_mutex_unlock(c->fork_right);
 	if (!res)
 		return (0);
-	if (content->args->feed_max != 0 && ++(*count) >= content->args->feed_max)
+	if (c->args->feed_max != 0
+		&& ++(*count) >= c->args->feed_max
+		&& c->thread_active == 1)
 	{
-		content->sim_stop = 1;
-		return (0);
+		if (is_complete(c))
+			return (0);
 	}
-	ph_sleep(&content, content->number, content->args->sleep_time);
-	ph_think(&content, content->number);
+	if (!ph_sleep(&c, c->number, c->args->sleep_time))
+		return (0);
+	if (!ph_think(&c, c->number))
+		return (0);
 	return (1);
 }
 
 void	*runtime(void *list)
 {
 	size_t	count;
-	t_ph	*content;
+	t_ph	*c;
 
 	count = 0;
-	content = ((t_ph *)(((t_list *)(list))->content));
-	while (content->all_ready == 0)
+	c = ((t_ph *)(((t_list *)(list))->content));
+	while (c->thread_active == 0)
 		;
-	if (content->number % 2 == 0)
-		ft_pause(&content, 50);
-	while (content->sim_stop == 0)
+	if (c->number % 2 == 0)
+		ft_pause(&c, 50);
+	while (c->thread_active == 1)
 	{
-		if (pthread_mutex_lock(&(content->fork_left)) == 0)
-			ph_took_a_fork(&content, content->number);
-		if (content->fork_right == NULL)
+		if (pthread_mutex_lock(&(c->fork_left)) == 0)
+			ph_took_a_fork(&c, c->number);
+		if (c->fork_right == NULL)
 		{
-			while (pthread_mutex_unlock(&content->fork_left))
-				;
+			pthread_mutex_unlock(&c->fork_left);
 			break ;
 		}
-		if (pthread_mutex_lock(content->fork_right) == 0)
-			ph_took_a_fork(&content, content->number);
-		if (!eat_sleep_work(content, &count))
+		if (pthread_mutex_lock(c->fork_right) == 0)
+			ph_took_a_fork(&c, c->number);
+		if (!eat_sleep_work(c, &count))
 			break ;
 	}
 	return (NULL);

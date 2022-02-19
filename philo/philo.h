@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:02:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/19 15:27:00 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/19 19:16:03 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,7 @@ typedef struct s_ph
 	pthread_mutex_t	death_protection;
 	pthread_mutex_t	fork_left;
 	pthread_mutex_t	*fork_right;
-	int				died;
-	int				sim_stop;
-	int				all_ready;
+	int				thread_active;
 	size_t			time_of_death;
 	struct s_args	*args;
 }	t_ph;
@@ -47,6 +45,10 @@ typedef struct s_args
 	size_t			sleep_time;
 	size_t			feed_max;
 	pthread_mutex_t	write_mutex;
+	pthread_mutex_t	completed_mutex;
+	size_t			threads_completed;
+	pthread_mutex_t	simulation_mutex;
+	int				simulation_off;
 
 }	t_args;
 
@@ -62,16 +64,16 @@ int		preparation(int argc, char *argv[], t_args **args, t_list **list);
 t_list	*generate_list(t_args **args);
 
 /** PHILO **/
-int		ph_took_a_fork(t_ph **content, size_t philo);
-int		ph_eat(t_ph **content, size_t philo, size_t duration);
-int		ph_sleep(t_ph **content, size_t philo, size_t duration);
-int		ph_think(t_ph **content, size_t philo);
-int		ph_died(t_ph **content, size_t philo);
+int		ph_took_a_fork(t_ph **c, size_t philo);
+int		ph_eat(t_ph **c, size_t philo, size_t duration);
+int		ph_sleep(t_ph **c, size_t philo, size_t duration);
+int		ph_think(t_ph **c, size_t philo);
+int		ph_died(t_ph **c, size_t philo);
 
 /** TIME **/
 size_t	timestamp_ms(void);
-int		ft_pause(t_ph **content, size_t duration);
-int		still_alive(t_ph **content);
+int		ft_pause(t_ph **c, size_t duration);
+int		still_alive(t_ph **c);
 
 /** PROGRAM **/
 void	*runtime(void *arg);

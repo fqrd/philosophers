@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 12:10:39 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/14 18:32:36 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/19 19:16:22 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ static int	terminate_threads(t_list **list)
 		if (!start)
 			start = *list;
 		content = (t_ph *)(*list)->content;
-		pthread_join(content->thread, NULL);
+		if (pthread_join(content->thread, NULL) != 0)
+			return (0);
 		*list = (*list)->next;
 	}
 	return (1);
@@ -74,14 +75,38 @@ static int	clear_philosophers(t_list **list)
 	return (1);
 }
 
+static int	clear_args(t_args **args)
+{
+	if ((pthread_mutex_t *)&((*args)->simulation_mutex) != NULL)
+	{
+		if (pthread_mutex_destroy(&(*args)->simulation_mutex) != 0)
+			return (0);
+	}
+	if ((pthread_mutex_t *)&((*args)->write_mutex) != NULL)
+	{
+		if (pthread_mutex_destroy(&(*args)->write_mutex) != 0)
+			return (0);
+	}
+	if ((pthread_mutex_t *)&((*args)->completed_mutex) != NULL)
+	{
+		if (pthread_mutex_destroy(&(*args)->completed_mutex) != 0)
+			return (0);
+	}
+	free(*args);
+	return (1);
+}
+
 int	clear(t_list **list, t_args **args)
 {
 	if (!terminate_threads(list))
 		return (0);
+	printf("MUTEXES\n");
 	if (!destroy_mutexes(list))
 		return (0);
+	printf("PHILOS\n");
 	if (!clear_philosophers(list))
 		return (0);
-	free(*args);
+	if (!clear_args(args))
+		return (0);
 	return (1);
 }
