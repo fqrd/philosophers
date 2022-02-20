@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 12:10:39 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/19 22:26:07 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/20 11:31:31 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,19 +85,15 @@ int	clear_args(t_args **args)
 
 int	clear(t_list **list, t_args **args)
 {
-	while (1)
+	t_list	*start;
+
+	start = NULL;
+	while (*list != start)
 	{
-		usleep(500);
-		if (pthread_mutex_lock(&(*args)->thread_stopped_mutex) == 0)
-		{
-			printf("%ld/%ld\n", (*args)->threads_stopped_count, (*args)->number);
-			if ((*args)->threads_stopped_count >= (*args)->number)
-			{
-				pthread_mutex_unlock(&(*args)->thread_stopped_mutex);
-				break ;
-			}
-			pthread_mutex_unlock(&(*args)->thread_stopped_mutex);
-		}
+		if (!start)
+			start = *list;
+		pthread_join(((t_ph *)(*list)->content)->thread, NULL);
+		*list = (*list)->next;
 	}
 	if (!destroy_mutexes(list))
 		return (0);

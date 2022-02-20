@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 19:02:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/19 22:07:41 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/20 11:20:55 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,6 @@ typedef struct s_list
 	void			*content;	
 }	t_list;
 
-typedef struct s_ph
-{
-	size_t			number;
-	pthread_t		thread;
-	pthread_mutex_t	death_protection;
-	pthread_mutex_t	fork_left;
-	pthread_mutex_t	*fork_right;
-	int				thread_active;
-	size_t			time_of_death;
-	struct s_args	*args;
-}	t_ph;
-
 typedef struct s_args
 {
 	size_t			number;
@@ -51,8 +39,19 @@ typedef struct s_args
 	int				simulation_off;
 	pthread_mutex_t	thread_stopped_mutex;
 	size_t			threads_stopped_count;
-
 }	t_args;
+
+typedef struct s_ph
+{
+	size_t			number;
+	pthread_t		thread;
+	pthread_mutex_t	death_protection;
+	pthread_mutex_t	fork_left;
+	pthread_mutex_t	*fork_right;
+	int				thread_active;
+	size_t			time_of_death;
+	struct s_args	*args;
+}	t_ph;
 
 typedef struct timeval	t_timeval;
 

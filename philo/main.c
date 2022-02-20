@@ -6,7 +6,7 @@
 /*   By: fcaquard <fcaquard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 15:30:46 by fcaquard          #+#    #+#             */
-/*   Updated: 2022/02/19 22:26:16 by fcaquard         ###   ########.fr       */
+/*   Updated: 2022/02/20 11:31:21 by fcaquard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static t_list	*init_pthreads(t_args **args, t_list *list)
 			content->fork_right = &(((t_ph *)(list->prev->content))->fork_left);
 		else
 			content->fork_right = NULL;
-		if (pthread_create(&(content->thread), NULL, &runtime, list))
+		if (pthread_create(&(content->thread), NULL, &runtime, list) != 0)
 		{
 			clear(&list, args);
 			return (NULL);
